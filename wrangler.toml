@@ -1,0 +1,52 @@
+name = "maikai-api"
+main = "src/index.ts"
+compatibility_date = "2026-06-01"
+compatibility_flags = ["nodejs_compat"]
+
+# --- Durable Objects: one room per active order (dispatch + live tracking) ---
+[[durable_objects.bindings]]
+name = "ORDER_ROOM"
+class_name = "OrderRoom"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["OrderRoom"]
+
+# --- R2: private buckets (menu photos, delivery proof, KYC docs) ---
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "maikai-media"
+
+[[r2_buckets]]
+binding = "KYC_DOCS"
+bucket_name = "maikai-kyc"
+
+# --- Queues: async work ---
+[[queues.producers]]
+binding = "JOBS"
+queue = "maikai-jobs"
+
+[[queues.consumers]]
+queue = "maikai-jobs"
+max_batch_size = 25
+max_retries = 5
+
+# --- KV: velocity counters, runtime config ---
+[[kv_namespaces]]
+binding = "RATE"
+id = "REPLACE_WITH_KV_ID"
+
+# --- Cron: payouts, budget sync, chargeback deadline scan ---
+[triggers]
+crons = ["0 3 * * *", "*/15 * * * *"]
+
+# Secrets (set with `wrangler secret put <NAME>`) — see .dev.vars.example
+# SUPABASE_URL, SUPABASE_SERVICE_KEY, SUPABASE_JWT_SECRET,
+# DOKU_CLIENT_ID, DOKU_SECRET, DOKU_WEBHOOK_SECRET,
+# BSP_SETTLEMENT_SECRET, GOOGLE_MAPS_KEY, TURNSTILE_SECRET
+
+[env.staging]
+name = "maikai-api-staging"
+
+[env.production]
+name = "maikai-api-production"

@@ -1,0 +1,19 @@
+# Copy to `.dev.vars` for local dev. NEVER commit real values.
+# In production set each with: wrangler secret put <NAME>
+
+# Supabase
+SUPABASE_URL="https://YOUR_PROJECT.supabase.co"
+SUPABASE_SERVICE_KEY="service-role-key"          # server-only; bypasses RLS — guard carefully
+SUPABASE_JWT_SECRET="jwt-secret-from-supabase"   # verifies request tokens at the edge
+
+# BSP Tonga / Doku (white-labelled gateway)
+DOKU_CLIENT_ID="doku-client-id"
+DOKU_SECRET="doku-shared-secret"
+DOKU_WEBHOOK_SECRET="doku-webhook-signing-secret"
+BSP_SETTLEMENT_SECRET="bsp-settlement-hmac-secret"
+
+# Google Maps Platform
+GOOGLE_MAPS_KEY="maps-api-key"
+
+# Cloudflare Turnstile (bot mitigation on signup + checkout)
+TURNSTILE_SECRET="turnstile-secret"
